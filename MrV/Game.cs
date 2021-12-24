@@ -1,44 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace MrV {
-	public class Game {
-		public enum GameStatus { None, Running, Ended }
-		public GameStatus status;
-		AppInput appInput;
-		Map2d screen, backbuffer;
-		Map2d map;
-		List<IDrawable> drawList = new List<IDrawable>();
-		List<IUpdatable> updateList = new List<IUpdatable>();
-		List<ConsoleKeyInfo> inputQueue = new List<ConsoleKeyInfo>();
-		Coord mapOffset = Coord.Zero;
-		EntityMobileObject player;
-
-		public void Init() {
-			InitScreen();
-			InitInput();
-			InitMaze();
-			InitEntities();
-			status = GameStatus.Running;
+	public class Game : CommandLineGameEngine {
+		EntityMobileObject player, mrv;
+		EntityBasic goal;
+        protected override void InitScreen(out Coord size, out char defaultCharacter) {
+			size = new Coord(60, 20);
+			defaultCharacter = '\0';
 		}
-		void InitScreen() {
-			Coord screenSize = new Coord(60, 20);
-			screen = new Map2d(screenSize, '\0');
-			backbuffer = new Map2d(screenSize, '\0');
-		}
-		void InitInput() {
-			appInput = new AppInput();
-			void MapScroll(Coord dir) { mapOffset -= dir; }
-			void PlayerMove(Coord dir) {
-				const int scrollBorderBuffer = 2;
-				player.SetVelocity(dir);
-				Coord p = player.position + mapOffset;
-				if (p.col < scrollBorderBuffer) { MapScroll(Coord.Left); }
-				if (p.row < scrollBorderBuffer) { MapScroll(Coord.Up); }
-				if (p.col >= screen.GetSize().col - scrollBorderBuffer) { MapScroll(Coord.Right); }
-				if (p.row >= screen.GetSize().row - scrollBorderBuffer) { MapScroll(Coord.Down); }
-			}
-			int controlSchemeIndex = 0;
+		protected override void InitInput(AppInput appInput) {
 			InputMap[] controlSchema = new InputMap[] {
 			new InputMap(
 				new KBind(ConsoleKey.W, () => PlayerMove(Coord.Up), "move player up"),
@@ -55,6 +25,7 @@ namespace MrV {
 				new KBind(ConsoleKey.DownArrow, () => MapScroll(Coord.Down), "pan map down"),
 				new KBind(ConsoleKey.RightArrow, () => MapScroll(Coord.Right), "pan map right"))
 			};
+			int controlSchemeIndex = 0;
 			InputMap system = new InputMap(
 				new KBind(ConsoleKey.H, PrintKeyBindings, "show key bindings"),
 				new KBind(ConsoleKey.M, () => {
@@ -65,25 +36,90 @@ namespace MrV {
 			appInput.EnableInputMap(system);
 			appInput.EnableInputMap(controlSchema[controlSchemeIndex]);
 		}
+		void PlayerMove(Coord dir) {
+			player.SetVelocity(dir);
+			KeepPointOnScreen(player.position + dir);
+		}
+		void MapScroll(Coord dir) { drawOffset -= dir; }
+		protected override void InitData() {
+			InitMaze();
+			InitEntities();
+		}
 		void InitMaze() {
 			string mazeFile = "maze.txt";
-			MazeGeneration.MazeGen.WriteMaze(100, 51, 1, 1, 123, mazeFile);
+			MrV.MazeGen.WriteMaze(99, 51, 1, 1, 123, mazeFile);
 			map = Map2d.LoadFromFile(mazeFile);
 			drawList.Add(map);
 		}
 		void InitEntities() {
 			player = new EntityMobileObject("player", new ConsoleTile('@', ConsoleColor.Green), new Coord(1, 1));
-			player.onUpdate += () => {
-				UpdateMob(player);
+			bool wizardGranted = false;
+			Coord lastPlayerMove = Coord.Zero;
+			player.onUpdate = () => {
+				if (player.velocity != Coord.Zero) {
+					lastPlayerMove = player.velocity;
+				}
+				CollisionUpdate(player);
 				if (map[player.position] == ' ') {
 					map[player.position] = '.';
 				}
 			};
+			mrv = new EntityMobileObject("Mr.V", new ConsoleTile('V', ConsoleColor.Cyan), new Coord(3, 3));
+			int nextMove = 0;
+			mrv.onUpdate = () => {
+				CollisionUpdate(mrv);
+				if (mrv.position == player.position && !wizardGranted) {
+					SimpleMessageBox("You're a Wizard!\n\nPress space to shoot magic missles!", ConsoleColor.Cyan);
+					wizardGranted = true;
+					player.icon = new ConsoleTile('W', ConsoleColor.Green, ConsoleColor.DarkGreen);
+					appInput.EnableInputMap(new InputMap(new KBind(ConsoleKey.Spacebar, () => {
+						ShootMagicMissle(new ConsoleTile('*', ConsoleColor.Red), player.position, lastPlayerMove);
+					}, "shoot magic missile")));
+				}
+				if (Environment.TickCount > nextMove) {
+					Coord dir = Coord.CardinalDirections[Environment.TickCount % Coord.CardinalDirections.Length];
+					mrv.SetVelocity(dir);
+					nextMove = Environment.TickCount + 100;
+				}
+			};
+			goal = new EntityBasic("goal", new ConsoleTile('g', ConsoleColor.Yellow), map.GetSize() - Coord.Two);
+			goal.onUpdate = () => {
+				if (goal.position == player.position) {
+					SimpleMessageBox("You Won!", ConsoleColor.Yellow);
+					status = GameStatus.Ended;
+				}
+			};
 			drawList.Add(player);
+			drawList.Add(mrv);
+			drawList.Add(goal);
 			updateList.Add(player);
+			updateList.Add(mrv);
+			updateList.Add(goal);
 		}
-
-		void UpdateMob(EntityMobileObject mob) {
+		void ShootMagicMissle(ConsoleTile tile, Coord position, Coord direction) {
+			EntityMobileObject fireball = new EntityMobileObject("fireball", tile, position);
+			int nextMove = 0;
+			fireball.onUpdate = () => {
+				bool oob = !fireball.position.IsWithin(map.GetSize());
+				bool hitWall = !oob && map[fireball.position].letter == '#';
+				if (hitWall) {
+					map[fireball.position] = ',';
+				}
+				if (oob || hitWall) {
+					drawList.Remove(fireball);
+					updateList.Remove(fireball);
+				}
+				if (Environment.TickCount > nextMove) {
+					nextMove = Environment.TickCount + 50;
+					fireball.SetVelocity(direction);
+				} else {
+					fireball.SetVelocity(Coord.Zero);
+				}
+			};
+			drawList.Add(fireball);
+			updateList.Add(fireball);
+		}
+		void CollisionUpdate(EntityMobileObject mob) {
 			if (!mob.position.IsWithin(map.GetSize()) || map[mob.position].letter == '#') {
 				mob.position = mob.lastValidPosition;
 			} else {
@@ -92,73 +128,15 @@ namespace MrV {
 			mob.SetVelocity(Coord.Zero);
 		}
 		void PrintKeyBindings() {
-			const int infoWindowScreenBuffer = 2;
-			const int infoWindowScreenWidth = 40;
+			SimpleMessageBox(GetKeyText());
+		}
+		void SimpleMessageBox(string message, ConsoleColor textColor = ConsoleColor.White) {
 			Coord screenSize = screen.GetSize();
-			screen.Fill(new ConsoleTile('.', ConsoleColor.Black, ConsoleColor.DarkGray), 
-				new Rect(infoWindowScreenBuffer, infoWindowScreenBuffer, infoWindowScreenWidth, screenSize.row - infoWindowScreenBuffer*2));
-			screen.Render(Coord.Zero, backbuffer);
-			var binds = appInput.currentKeyBinds.keyBinds;
-			Console.BackgroundColor = ConsoleColor.DarkGray;
-			int kbindIndex = 0;
-			foreach (var kbindEntry in binds) {
-				List<KBind> kbinds = kbindEntry.Value;
-				for (int i = 0; i < kbinds.Count; ++i) {
-					KBind kbind = kbinds[i];
-					Console.SetCursorPosition(3, 3 + kbindIndex);
-					Console.ForegroundColor = ConsoleColor.White;
-					Console.Write(kbind.key);
-					Console.ForegroundColor = ConsoleColor.Gray;
-					Console.Write(" ");
-					Console.Write(kbind.description);
-					++kbindIndex;
-					if (kbindIndex >= screenSize.row - 5) break;
-				}
-				if (kbindIndex >= screenSize.row - 5) break;
-			}
-			ConsoleTile.DefaultTile.ApplyColor();
-			Console.ReadKey();
-			screen.Fill(ConsoleTile.DefaultTile);
-			backbuffer.Fill(ConsoleTile.DefaultTile);
-		}
-		public void Draw() {
-			screen.Fill(ConsoleTile.DefaultTile);
-			ConsoleTile[,] drawBuffer = screen.GetRawMap();
-			for (int i = 0; i < drawList.Count; ++i) {
-				drawList[i].Draw(drawBuffer, mapOffset);
-			}
-			screen.Render(Coord.Zero, backbuffer);
-			Map2d temp = screen; screen = backbuffer; backbuffer = temp;
-			ConsoleTile.DefaultTile.ApplyColor();
-			Console.SetCursorPosition(0, screen.Height);
-		}
-		public void Input() {
-			ConsoleKeyInfo input;
-			while (Console.KeyAvailable) {
-				input = Console.ReadKey();
-				Console.Write("\b "); // backspace and overwrite typed character
-				inputQueue.Add(input);
-				if (input.Key == ConsoleKey.Escape) { status = GameStatus.Ended; return; }
-			}
-		}
-		public void Update() {
-			ServiceInputQueue();
-			for (int i = 0; i < updateList.Count; ++i) {
-				updateList[i].Update();
-			}
-		}
-		public void ServiceInputQueue() {
-			do {
-				if (inputQueue.Count > 0) {
-					ConsoleKeyInfo input = inputQueue[0];
-					inputQueue.RemoveAt(0);
-					if (!appInput.DoKeyPress(input)) {
-						// Console.WriteLine(input.Key); // uncomment to show unexpected key presses
-					}
-				}
-			} while (inputQueue.Count > 0);
-		}
-		public void Release() {
+			const int insetSize = 2, width = 40;
+			Rect area = new Rect(insetSize, insetSize, width, screenSize.row - insetSize * 2);
+			Coord inset = new Coord(insetSize, insetSize / 2);
+			ConsoleTile messageBack = new ConsoleTile('.', ConsoleColor.Black, ConsoleColor.DarkGray);
+			MessageBox(message, textColor, area, messageBack, inset);
 		}
 	}
 }

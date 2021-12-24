@@ -29,6 +29,20 @@ namespace MrV {
 		public Coord GetSize() => max - min;
 		public Rect GetRect() => this;
 		public Coord Size => max - min;
+		public bool Contains(Coord p) => p.X >= min.X && p.Y >= min.Y && p.X < max.X && p.Y < max.Y;
+		public Coord GetOutOfBoundsDelta(Coord p) {
+			if (Contains(p)) return Coord.Zero;
+			Coord b = ClosestPoint(p);
+			return p - b;
+        }
+		public Coord ClosestPoint(Coord p) {
+			Coord b = p;
+			if (p.X <= min.X) { b.X = min.X; }
+			if (p.X >= max.X) { b.X = max.X; }
+			if (p.Y <= min.Y) { b.Y = min.Y; }
+			if (p.Y >= max.Y) { b.Y = max.Y; }
+			return b;
+		}
 
 		public Rect Intersect(Rect r) {
 			GetRectIntersect(min, max, r.min, r.max, out Coord iMin, out Coord iMax);

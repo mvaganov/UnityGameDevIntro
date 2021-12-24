@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using MrV;
 
-namespace MazeGeneration {
+namespace MrV {
 	public class MazeGen {
 		const char Filled = '#', Walkable = ' ';
 		public static bool show = false;

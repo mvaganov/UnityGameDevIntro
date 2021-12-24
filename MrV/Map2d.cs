@@ -101,7 +101,11 @@ namespace MrV {
 		/// </summary>
 		/// <param name="filePathAndName"></param>
 		public void LoadFile(string filePathAndName) {
-			LoadFromString(TextUtil.StringFromFile(filePathAndName));
+			string text = TextUtil.StringFromFile(filePathAndName);
+			if (text.Length > 0 && text[text.Length-1] == '\n') {
+				text = text.Substring(0, text.Length - 1); // remove trailing endline
+			}
+			LoadFromString(text);
 		}
 
 		public static Map2d LoadFromFile(string filePathAndName) {

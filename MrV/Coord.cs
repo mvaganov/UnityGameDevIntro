@@ -19,7 +19,7 @@ namespace MrV {
 		public static readonly Coord Left = new Coord(-1, 0);
 		public static readonly Coord Down = new Coord(0, 1);
 		public static readonly Coord Right = new Coord(1, 0);
-
+		public static Coord[] CardinalDirections = new Coord[] { Up, Left, Down, Right };
 		public override string ToString() => "(" + col + "," + row + ")";
 		public override int GetHashCode() => row * 0x00010000 + col;
 		public override bool Equals(object o) {
