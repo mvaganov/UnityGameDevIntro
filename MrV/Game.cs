@@ -8,7 +8,7 @@ namespace MrV {
 			size = new Coord(60, 20);
 			defaultCharacter = '\0';
 		}
-		protected override void InitInput(AppInput appInput) {
+		protected override void InitInput(InputSystem appInput) {
 			InputMap[] controlSchema = new InputMap[] {
 			new InputMap(
 				new KBind(ConsoleKey.W, () => PlayerMove(Coord.Up), "move player up"),
@@ -20,10 +20,10 @@ namespace MrV {
 				new KBind(ConsoleKey.DownArrow, () => PlayerMove(Coord.Down), "move player down"),
 				new KBind(ConsoleKey.RightArrow, () => PlayerMove(Coord.Right), "move player right")),
 			new InputMap(
-				new KBind(ConsoleKey.UpArrow, () => MapScroll(Coord.Up), "pan map up"),
-				new KBind(ConsoleKey.LeftArrow, () => MapScroll(Coord.Left), "pan map left"),
-				new KBind(ConsoleKey.DownArrow, () => MapScroll(Coord.Down), "pan map down"),
-				new KBind(ConsoleKey.RightArrow, () => MapScroll(Coord.Right), "pan map right"))
+				new KBind(ConsoleKey.UpArrow, () => ScreenScroll(Coord.Up), "pan map up"),
+				new KBind(ConsoleKey.LeftArrow, () => ScreenScroll(Coord.Left), "pan map left"),
+				new KBind(ConsoleKey.DownArrow, () => ScreenScroll(Coord.Down), "pan map down"),
+				new KBind(ConsoleKey.RightArrow, () => ScreenScroll(Coord.Right), "pan map right"))
 			};
 			int controlSchemeIndex = 0;
 			InputMap system = new InputMap(
@@ -40,7 +40,6 @@ namespace MrV {
 			player.SetVelocity(dir);
 			KeepPointOnScreen(player.position + dir);
 		}
-		void MapScroll(Coord dir) { drawOffset -= dir; }
 		protected override void InitData() {
 			InitMaze();
 			InitEntities();
@@ -63,33 +62,19 @@ namespace MrV {
 			};
 			mrv = new EntityMobileObject("Mr.V", new ConsoleTile('V', ConsoleColor.Cyan), new Coord(3, 3));
 			int nextMove = 0;
+			Random randomNumberGenerator = new Random();
 			mrv.onUpdate = () => {
+				mrv.velocity = Coord.Zero;
 				if (Environment.TickCount > nextMove) {
-					Coord dir = Coord.CardinalDirections[Environment.TickCount % Coord.CardinalDirections.Length];
+					Coord dir = Coord.CardinalDirections[randomNumberGenerator.Next() % Coord.CardinalDirections.Length];
 					mrv.SetVelocity(dir);
 					nextMove = Environment.TickCount + 100;
 				}
-				mrv.velocity = Coord.Zero;
 			};
 			goal = new EntityBasic("goal", new ConsoleTile('g', ConsoleColor.Yellow), map.GetSize() - Coord.Two);
 			AddToLists(player);
 			AddToLists(mrv);
 			AddToLists(goal);
-		}
-		void ShootMagicMissle(ConsoleTile tile, Coord position, Coord direction) {
-			EntityMobileObject missile = new EntityMobileObject("magic missile", tile, position);
-			int nextMove = 0;
-			missile.onUpdate = () => {
-				bool oob = !missile.position.IsWithin(map.GetSize());
-                if (oob) { Destroy(missile); }
-                if (Environment.TickCount > nextMove) {
-					nextMove = Environment.TickCount + 50;
-					missile.SetVelocity(direction);
-				} else {
-					missile.SetVelocity(Coord.Zero);
-				}
-			};
-			AddToLists(missile);
 		}
 		void InitCollisionRules() {
 			AddCollisionRule(new CollisionRule("Map/Entity", typeof(Map2d), typeof(EntityMobileObject), EntityOnMap));
@@ -117,7 +102,7 @@ namespace MrV {
 			}
 		}
 		private bool wizardGranted = false;
-		Coord lastPlayerMove = Coord.Zero;
+		private Coord lastPlayerMove = Coord.Zero;
 		void EntityToEntity(object mobObject0, object mobObject1) {
 			EntityMobileObject mob0 = (EntityMobileObject)mobObject0;
 			EntityMobileObject mob1 = (EntityMobileObject)mobObject1;
@@ -125,10 +110,25 @@ namespace MrV {
 				SimpleMessageBox("You're a Wizard!\n\nPress space to shoot magic missles!", ConsoleColor.Cyan);
 				wizardGranted = true;
 				player.icon = new ConsoleTile('W', ConsoleColor.Green, ConsoleColor.DarkGreen);
-				appInput.EnableInputMap(new InputMap(new KBind(ConsoleKey.Spacebar, () => {
+				inputSystem.EnableInputMap(new InputMap(new KBind(ConsoleKey.Spacebar, () => {
 					ShootMagicMissle(new ConsoleTile('*', ConsoleColor.Red), player.position, lastPlayerMove);
 				}, "shoot magic missile")));
 			}
+		}
+		void ShootMagicMissle(ConsoleTile tile, Coord position, Coord direction) {
+			EntityMobileObject missile = new EntityMobileObject("magic missile", tile, position);
+			int nextMove = 0;
+			long timelimit = Environment.TickCount + 3000;
+			missile.onUpdate = () => {
+				if (Environment.TickCount > timelimit) { Destroy(missile); }
+				if (Environment.TickCount > nextMove) {
+					nextMove = Environment.TickCount + 50;
+					missile.SetVelocity(direction);
+				} else {
+					missile.SetVelocity(Coord.Zero);
+				}
+			};
+			AddToLists(missile);
 		}
 		void EntityToBasicEntity(object mobObject, object basicObject) {
 			EntityMobileObject mob = (EntityMobileObject)mobObject;
@@ -139,7 +139,7 @@ namespace MrV {
 			}
 		}
 		void PrintKeyBindings() {
-			SimpleMessageBox(GetKeyText());
+			SimpleMessageBox(GetInputDescription());
 		}
 		void SimpleMessageBox(string message, ConsoleColor textColor = ConsoleColor.White) {
 			Coord screenSize = screen.GetSize();

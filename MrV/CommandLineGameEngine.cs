@@ -6,7 +6,7 @@ namespace MrV {
 	public abstract class CommandLineGameEngine {
 		public enum GameStatus { None, Running, Ended }
 		public GameStatus status;
-		protected AppInput appInput;
+		protected InputSystem inputSystem;
 		protected Map2d screen, backbuffer;
 		protected Map2d map;
 		protected Coord drawOffset = Coord.Zero;
@@ -22,8 +22,8 @@ namespace MrV {
 		public virtual void Init() {
 			InitScreen(out Coord size, out char defaultChar);
 			InitScreen(size, defaultChar);
-			appInput = new AppInput();
-			InitInput(appInput);
+			inputSystem = new InputSystem();
+			InitInput(inputSystem);
 			InitData();
 			UpdateRuleLookupDictionary();
 			status = GameStatus.Running;
@@ -39,6 +39,7 @@ namespace MrV {
 			ConsoleTile.DefaultTile.ApplyColor();
 			Console.SetCursorPosition(0, screen.Height);
 		}
+		public void ScreenScroll(Coord dir) { drawOffset -= dir; }
 		public void KeepPointOnScreen(Coord position) {
 			Coord screenMargin = new Coord(3, 2);
 			Rect viewArea = new Rect(screenMargin, screen.GetSize() - Coord.One - screenMargin);
@@ -61,7 +62,7 @@ namespace MrV {
 			}
 			CollisionUpdate();
 			for (int i = 0; i < updateList.Count; ++i) {
-				EntityMobileObject mob = collidableList[i] as EntityMobileObject;
+				EntityMobileObject mob = updateList[i] as EntityMobileObject;
 				if (mob != null) {
 					mob.lastValidPosition = mob.position;
 				}
@@ -95,16 +96,15 @@ namespace MrV {
 				if (inputQueue.Count > 0) {
 					ConsoleKeyInfo input = inputQueue[0];
 					inputQueue.RemoveAt(0);
-					if (!appInput.DoKeyPress(input)) {
+					if (!inputSystem.DoKeyPress(input)) {
 						// Console.WriteLine(input.Key); // uncomment to show unexpected key presses
 					}
 				}
 			} while (inputQueue.Count > 0);
 		}
-		public string GetKeyText() {
-			var binds = appInput.currentKeyBinds.keyBinds;
+		public string GetInputDescription() {
 			StringBuilder sb = new StringBuilder();
-			foreach (var kbindEntry in binds) {
+			foreach (var kbindEntry in inputSystem.currentKeyBinds.keyBinds) {
 				List<KBind> kbinds = kbindEntry.Value;
 				for (int i = 0; i < kbinds.Count; ++i) {
 					KBind kbind = kbinds[i];
@@ -188,6 +188,7 @@ namespace MrV {
 			//		foundRules.Add(r);
 			//	}
 			//}
+
 			// O(1)
 			if (collisionRuleLookupTables.TryGetValue(a, out var subDictionary)) {
 				if (subDictionary.TryGetValue(b, out var ruleset)) {
@@ -224,7 +225,7 @@ namespace MrV {
 				rule.onCollision(a, b);
 			}
 		}
-		protected abstract void InitInput(AppInput appInput);
+		protected abstract void InitInput(InputSystem appInput);
 		protected abstract void InitScreen(out Coord size, out char defaultCharacter);
 		protected abstract void InitData();
 	}

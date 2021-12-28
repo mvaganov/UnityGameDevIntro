@@ -71,7 +71,7 @@ namespace MrV {
 			return bindings;
 		}
 	}
-	public class AppInput {
+	public class InputSystem {
 		public InputMap currentKeyBinds = new InputMap();
 		public bool DoKeyPress(ConsoleKeyInfo key) {
 			IList<KBind> kBinds = currentKeyBinds.Get(key.Key);

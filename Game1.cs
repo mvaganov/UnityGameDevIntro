@@ -13,9 +13,13 @@ namespace Game1 {
 			public void SetCursorPosition() { Console.SetCursorPosition(x, y); }
 			public bool IsInside(Coord limit) { return x < limit.x && y < limit.y && x >= 0 && y >= 0; }
 			public static Coord operator+(Coord a, Coord b) { return new Coord(a.x + b.x, a.y + b.y); }
-			public static Coord Zero = new Coord(0, 0), Up = new Coord(0, -1), Left = new Coord(-1, 0),
-				Down = new Coord(0, 1), Right = new Coord(1, 0);
-			public static Coord[] PossibleMoves = new Coord[] { Up, Left, Down, Right };
+			public static Coord 
+				Zero  = new Coord(0, 0),
+				Up    = new Coord(0,-1),
+				Left  = new Coord(-1,0),
+				Down  = new Coord(0, 1),
+				Right = new Coord(1, 0);
+			public static Coord[] Directions = new Coord[] { Up, Left, Down, Right };
         }
 		public class Entity {
 			public Coord position;
@@ -85,7 +89,7 @@ namespace Game1 {
 					case 'd': player.direction = Coord.Right; break;
 					case 'q': case (char)27: running = false; break;
 				}
-				mrv.direction = Coord.PossibleMoves[System.Environment.TickCount % Coord.PossibleMoves.Length];
+				mrv.direction = Coord.Directions[System.Environment.TickCount % Coord.Directions.Length];
 				for(int i = 0; i < entities.Count; ++i) {
 					Coord prev = entities[i].position;
 					entities[i].Move();
