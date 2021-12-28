@@ -1,10 +1,9 @@
 ﻿using System;
 
 namespace MrV {
-	public abstract class EntityBase : IDrawable, IRect, IUpdatable {
+	public abstract class EntityBase : IDrawable, IRect {
 		public string name;
 		public Coord position;
-		public abstract void Update();
 		public abstract void Draw(ConsoleTile[,] map, Coord offset);
 		public virtual Coord GetPosition() => position;
 		public abstract Coord GetSize();
@@ -13,21 +12,13 @@ namespace MrV {
 
 	public class EntityBasic : EntityBase {
 		public ConsoleTile icon;
-		public Action onUpdate;
-		public override void Update() {
-			onUpdate?.Invoke();
-		}
-
 		public override Coord GetSize() => Coord.One;
-
 		public EntityBasic() { }
-
 		public EntityBasic(string name, ConsoleTile icon, Coord position) {
 			this.name = name;
 			this.position = position;
 			this.icon = icon;
 		}
-
 		public override void Draw(ConsoleTile[,] map, Coord offset) {
 			if (position.IsWithin(-offset, Coord.SizeOf(map) - offset)) {
 				map[position.row + offset.row, position.col + offset.col] = icon;
@@ -35,14 +26,17 @@ namespace MrV {
 		}
 	}
 
-	public class EntityMobileObject : EntityBasic {
+	public class EntityMobileObject : EntityBasic, IUpdatable {
 		public char currentMove;
 		public Coord lastValidPosition;
 		public Coord velocity;
+		public Action onUpdate;
 		public EntityMobileObject() { }
-		public EntityMobileObject(string name, ConsoleTile icon, Coord position) : base(name, icon, position) { }
+		public EntityMobileObject(string name, ConsoleTile icon, Coord position) : base(name, icon, position) {
+			lastValidPosition = position;
+		}
 		public void SetVelocity(Coord value) { velocity = value; }
-		public override void Update() {
+		public virtual void Update() {
 			position += velocity;
 			onUpdate?.Invoke();
 		}

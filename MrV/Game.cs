@@ -44,88 +44,99 @@ namespace MrV {
 		protected override void InitData() {
 			InitMaze();
 			InitEntities();
+			InitCollisionRules();
 		}
 		void InitMaze() {
 			string mazeFile = "maze.txt";
-			MrV.MazeGen.WriteMaze(99, 51, 1, 1, 123, mazeFile);
+			MazeGen.WriteMaze(99, 51, 1, 1, 123, mazeFile);
 			map = Map2d.LoadFromFile(mazeFile);
 			drawList.Add(map);
+			collidableList.Add(map);
 		}
 		void InitEntities() {
 			player = new EntityMobileObject("player", new ConsoleTile('@', ConsoleColor.Green), new Coord(1, 1));
-			bool wizardGranted = false;
-			Coord lastPlayerMove = Coord.Zero;
 			player.onUpdate = () => {
 				if (player.velocity != Coord.Zero) {
 					lastPlayerMove = player.velocity;
 				}
-				CollisionUpdate(player);
-				if (map[player.position] == ' ') {
-					map[player.position] = '.';
-				}
+				player.velocity = Coord.Zero;
 			};
 			mrv = new EntityMobileObject("Mr.V", new ConsoleTile('V', ConsoleColor.Cyan), new Coord(3, 3));
 			int nextMove = 0;
 			mrv.onUpdate = () => {
-				CollisionUpdate(mrv);
-				if (mrv.position == player.position && !wizardGranted) {
-					SimpleMessageBox("You're a Wizard!\n\nPress space to shoot magic missles!", ConsoleColor.Cyan);
-					wizardGranted = true;
-					player.icon = new ConsoleTile('W', ConsoleColor.Green, ConsoleColor.DarkGreen);
-					appInput.EnableInputMap(new InputMap(new KBind(ConsoleKey.Spacebar, () => {
-						ShootMagicMissle(new ConsoleTile('*', ConsoleColor.Red), player.position, lastPlayerMove);
-					}, "shoot magic missile")));
-				}
 				if (Environment.TickCount > nextMove) {
 					Coord dir = Coord.CardinalDirections[Environment.TickCount % Coord.CardinalDirections.Length];
 					mrv.SetVelocity(dir);
 					nextMove = Environment.TickCount + 100;
 				}
+				mrv.velocity = Coord.Zero;
 			};
 			goal = new EntityBasic("goal", new ConsoleTile('g', ConsoleColor.Yellow), map.GetSize() - Coord.Two);
-			goal.onUpdate = () => {
-				if (goal.position == player.position) {
-					SimpleMessageBox("You Won!", ConsoleColor.Yellow);
-					status = GameStatus.Ended;
-				}
-			};
-			drawList.Add(player);
-			drawList.Add(mrv);
-			drawList.Add(goal);
-			updateList.Add(player);
-			updateList.Add(mrv);
-			updateList.Add(goal);
+			AddToLists(player);
+			AddToLists(mrv);
+			AddToLists(goal);
 		}
 		void ShootMagicMissle(ConsoleTile tile, Coord position, Coord direction) {
-			EntityMobileObject fireball = new EntityMobileObject("fireball", tile, position);
+			EntityMobileObject missile = new EntityMobileObject("magic missile", tile, position);
 			int nextMove = 0;
-			fireball.onUpdate = () => {
-				bool oob = !fireball.position.IsWithin(map.GetSize());
-				bool hitWall = !oob && map[fireball.position].letter == '#';
-				if (hitWall) {
-					map[fireball.position] = ',';
-				}
-				if (oob || hitWall) {
-					drawList.Remove(fireball);
-					updateList.Remove(fireball);
-				}
-				if (Environment.TickCount > nextMove) {
+			missile.onUpdate = () => {
+				bool oob = !missile.position.IsWithin(map.GetSize());
+                if (oob) { Destroy(missile); }
+                if (Environment.TickCount > nextMove) {
 					nextMove = Environment.TickCount + 50;
-					fireball.SetVelocity(direction);
+					missile.SetVelocity(direction);
 				} else {
-					fireball.SetVelocity(Coord.Zero);
+					missile.SetVelocity(Coord.Zero);
 				}
 			};
-			drawList.Add(fireball);
-			updateList.Add(fireball);
+			AddToLists(missile);
 		}
-		void CollisionUpdate(EntityMobileObject mob) {
-			if (!mob.position.IsWithin(map.GetSize()) || map[mob.position].letter == '#') {
-				mob.position = mob.lastValidPosition;
-			} else {
-				mob.lastValidPosition = mob.position;
+		void InitCollisionRules() {
+			AddCollisionRule(new CollisionRule("Map/Entity", typeof(Map2d), typeof(EntityMobileObject), EntityOnMap));
+			AddCollisionRule(new CollisionRule("Entity/Entity", typeof(EntityMobileObject), typeof(EntityMobileObject), EntityToEntity));
+			AddCollisionRule(new CollisionRule("Entity/EntityBasic", typeof(EntityMobileObject), typeof(EntityBasic), EntityToBasicEntity));
+		}
+		void EntityOnMap(object mapObject, object mobObject) {
+			EntityMobileObject mob = (EntityMobileObject)mobObject;
+			Map2d map = (Map2d)mapObject;
+			char tile = map[mob.position].letter;
+			if (mob == player) {
+				switch (tile) {
+					case ' ': map[mob.position] = '.'; return;
+				}
+			} else if (mob.icon.letter == '*') {
+				switch (tile) {
+					case '#':
+						map[mob.position] = ',';
+						Destroy(mob);
+						return;
+				}
 			}
-			mob.SetVelocity(Coord.Zero);
+			switch (tile) {
+				case '#': mob.position = mob.lastValidPosition; break;
+			}
+		}
+		private bool wizardGranted = false;
+		Coord lastPlayerMove = Coord.Zero;
+		void EntityToEntity(object mobObject0, object mobObject1) {
+			EntityMobileObject mob0 = (EntityMobileObject)mobObject0;
+			EntityMobileObject mob1 = (EntityMobileObject)mobObject1;
+			if (!wizardGranted && mob0 == mrv && mob1 == player) {
+				SimpleMessageBox("You're a Wizard!\n\nPress space to shoot magic missles!", ConsoleColor.Cyan);
+				wizardGranted = true;
+				player.icon = new ConsoleTile('W', ConsoleColor.Green, ConsoleColor.DarkGreen);
+				appInput.EnableInputMap(new InputMap(new KBind(ConsoleKey.Spacebar, () => {
+					ShootMagicMissle(new ConsoleTile('*', ConsoleColor.Red), player.position, lastPlayerMove);
+				}, "shoot magic missile")));
+			}
+		}
+		void EntityToBasicEntity(object mobObject, object basicObject) {
+			EntityMobileObject mob = (EntityMobileObject)mobObject;
+			EntityBasic basic = (EntityBasic)basicObject;
+			if (mob == player && basic == goal) {
+				SimpleMessageBox("You Won!", ConsoleColor.Yellow);
+				status = GameStatus.Ended;
+			}
 		}
 		void PrintKeyBindings() {
 			SimpleMessageBox(GetKeyText());

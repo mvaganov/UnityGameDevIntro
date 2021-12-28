@@ -15,6 +15,8 @@ namespace MrV {
 		}
 		public Map2d(Coord size) : this(size, ' ') { }
 
+		public Map2d(string fileData) { LoadFromString(fileData); }
+
 		public void SetSize(Coord newSize) {
 			if (IsSize(newSize)) return;
 			ConsoleTile[,] oldMap = map;
@@ -119,11 +121,15 @@ namespace MrV {
 			int lineWidth = 0;
 			for (int i = 0; i < text.Length; ++i) {
 				char c = text[i];
-				if (c == '\n') {
-					size.row++;
-					lineWidth = 0;
-				} else {
-					lineWidth++;
+                switch (c) {
+					case '\r': continue; // ignore linefeed
+					case '\n': if (i == text.Length - 1) { continue; } // ignore EOF trailing newline
+						size.row++;
+						lineWidth = 0;
+						break;
+					default:
+						lineWidth++;
+						break;
 				}
 				if (lineWidth > size.col) {
 					size.col = (short)lineWidth;
@@ -133,12 +139,16 @@ namespace MrV {
 			Coord cursor = Coord.Zero;
 			for (int i = 0; i < text.Length; ++i) {
 				char c = text[i];
-				if (c == '\n') {
-					cursor.row++;
-					cursor.col = 0;
-				} else {
-					this[cursor] = c;
-					cursor.col++;
+                switch (c) {
+					case '\r': continue; // ignore linefeed
+					case '\n': if (i == text.Length - 1) { continue; } // ignore EOF trailing newline
+						cursor.row++;
+						cursor.col = 0;
+						break;
+					default:
+						this[cursor] = c;
+						cursor.col++;
+						break;
 				}
 			}
 		}
