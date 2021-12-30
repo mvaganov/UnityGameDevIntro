@@ -52,11 +52,12 @@ namespace MrV {
 			drawList.Add(map);
 			collidableList.Add(map);
 		}
+		private Coord lastValidPlayerDirection = Coord.Zero;
 		void InitEntities() {
 			player = new EntityMobileObject("player", new ConsoleTile('@', ConsoleColor.Green), new Coord(1, 1));
 			player.onUpdate = () => {
 				if (player.velocity != Coord.Zero) {
-					lastPlayerMove = player.velocity;
+					lastValidPlayerDirection = player.velocity;
 				}
 				player.velocity = Coord.Zero;
 			};
@@ -84,25 +85,26 @@ namespace MrV {
 		void EntityOnMap(object mapObject, object mobObject) {
 			EntityMobileObject mob = (EntityMobileObject)mobObject;
 			Map2d map = (Map2d)mapObject;
-			char tile = map[mob.position].letter;
-			if (mob == player) {
-				switch (tile) {
+			char squareValue = map[mob.position].letter;
+			if (IsPlayer(mob)) {
+				switch (squareValue) {
 					case ' ': map[mob.position] = '.'; return;
 				}
-			} else if (mob.icon.letter == '*') {
-				switch (tile) {
+			} else if (IsFireball(mob)) {
+				switch (squareValue) {
 					case '#':
 						map[mob.position] = ',';
 						Destroy(mob);
 						return;
 				}
 			}
-			switch (tile) {
+			switch (squareValue) {
 				case '#': mob.position = mob.lastValidPosition; break;
 			}
 		}
+		public bool IsPlayer(EntityMobileObject mob) => mob == player;
+		public bool IsFireball(EntityMobileObject mob) => mob.icon.letter == '*';
 		private bool wizardGranted = false;
-		private Coord lastPlayerMove = Coord.Zero;
 		void EntityToEntity(object mobObject0, object mobObject1) {
 			EntityMobileObject mob0 = (EntityMobileObject)mobObject0;
 			EntityMobileObject mob1 = (EntityMobileObject)mobObject1;
@@ -111,7 +113,7 @@ namespace MrV {
 				wizardGranted = true;
 				player.icon = new ConsoleTile('W', ConsoleColor.Green, ConsoleColor.DarkGreen);
 				inputSystem.EnableInputMap(new InputMap(new KBind(ConsoleKey.Spacebar, () => {
-					ShootMagicMissle(new ConsoleTile('*', ConsoleColor.Red), player.position, lastPlayerMove);
+					ShootMagicMissle(new ConsoleTile('*', ConsoleColor.Red), player.position, lastValidPlayerDirection);
 				}, "shoot magic missile")));
 			}
 		}
