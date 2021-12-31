@@ -11,11 +11,11 @@ public class SetTextToInputDescription : MonoBehaviour {
     private void Start() {
         DoTheThing();
         InputSystem.onSettingsChange += DoTheThing;
-        Binding.OnActiveChange += DoTheThing;
+        InputControlBinding.OnActiveChange += DoTheThing;
     }
     private void OnDestroy() {
         InputSystem.onSettingsChange -= DoTheThing;
-        Binding.OnActiveChange -= DoTheThing;
+        InputControlBinding.OnActiveChange -= DoTheThing;
     }
     private void OnEnable() {
         DoTheThing();

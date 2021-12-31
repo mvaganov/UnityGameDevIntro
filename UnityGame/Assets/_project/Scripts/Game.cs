@@ -1,12 +1,11 @@
 using UnityEngine;
 using MrV;
-using NonStandard.Character;
 
 public class Game : MonoBehaviour {
     Map2d map;
     public Vector3 scale = Vector3.one * 4;
     [ContextMenuItem("add rules", nameof(AddRules))]
-    public GameObject wall, floor, brokenWall, playerCharacter, missileShooter, actionButton, messageAboutShooting, youWinMessage, mapViewer;
+    public GameObject wall, floor, brokenWall, playerCharacter, missileShooter, actionButton, controlsMessage, messageAboutShooting, youWinMessage, mapViewer;
     public NonStandard.Inputs.UserInput userInput;
     public Material travelled;
     void Start() {
@@ -25,8 +24,10 @@ public class Game : MonoBehaviour {
             new NonStandard.EventBind(this, nameof(MakeWizard))));
         r.AddIfMissingNamed(new CollidableRules.Rule("missile destroys walls", Collidable.Kind.MagicMissile, Collidable.Kind.Wall,
             new NonStandard.EventBind(r, nameof(r.DestroyBoth))));
-        userInput.AddBinding(new NonStandard.Inputs.Binding("use map view", "Player/MapView", NonStandard.Inputs.ControlType.Button,
+        userInput.AddBinding(new NonStandard.Inputs.InputControlBinding("swap to map view", "Player/MapView", NonStandard.Inputs.ControlType.Button,
             new NonStandard.EventBind(this, nameof(this.SwapCharacterAndMapView)), new string[] { "<Keyboard>/m" }));
+        userInput.AddBinding(new NonStandard.Inputs.InputControlBinding("show controls information", "Player/ShowControls", NonStandard.Inputs.ControlType.Button,
+            new NonStandard.EventBind(this, nameof(this.ToggleControlsMessage)), new string[] { "<Keyboard>/h" }));
     }
     private void Reset() {
         AddRules();
@@ -38,14 +39,13 @@ public class Game : MonoBehaviour {
         collidables[1].GetComponent<Renderer>().material = travelled;
     }
     public void MakeWizard(Collidable[] collidables) {
-        if (!missileShooter.activeInHierarchy) {
-            missileShooter.SetActive(true);
-            messageAboutShooting.SetActive(true);
-            NonStandard.Utility.Event buttonEvent = actionButton.GetComponent<NonStandard.Utility.Event>();
-            buttonEvent.Set(this, nameof(ShootMagicMissile));
-            Cooldown cd = actionButton.GetComponent <Cooldown>();
-            cd.cooldown = .5f;
-        }
+        if (missileShooter.activeInHierarchy) { return; }
+        missileShooter.SetActive(true);
+        messageAboutShooting.SetActive(true);
+        NonStandard.Utility.Event buttonEvent = actionButton.GetComponent<NonStandard.Utility.Event>();
+        buttonEvent.Set(this, nameof(ShootMagicMissile));
+        NonStandard.Ui.Cooldown cd = actionButton.GetComponent <NonStandard.Ui.Cooldown>();
+        cd.cooldown = .5f;
     }
     public void ShootMagicMissile() {
         if (!NonStandard.Inputs.UserInput.IsMouseOverUIObject() && Cursor.lockState != CursorLockMode.Locked) {
@@ -77,40 +77,22 @@ public class Game : MonoBehaviour {
         }
     }
     public void SwapCharacterAndMapView(UnityEngine.InputSystem.InputAction.CallbackContext context) {
-        switch (context.phase) {
-            case UnityEngine.InputSystem.InputActionPhase.Performed: {
-                    // TODO fix this! maybe something more like:
-                    /*                     
-                    NonStandard.Character.FpsCharacterController current = NonStandard.Character.FpsCharacterController.GetCurrentController();
-                    if (current.Target.gameObject == playerCharacter) {
-                        mapViewer.GetComponent<NonStandard.Character.CharacterRoot>().TakeControlOfUserInterface();
-                        return;
-                    }
-                    if (current.Target.gameObject == mapViewer) {
-                        playerCharacter.GetComponent<NonStandard.Character.CharacterRoot>().TakeControlOfUserInterface();
-                        return;
-                    }*/
-                    CharacterCamera cam = CharacterCamera.FindCameraTargettingChildOf(playerCharacter.transform);
-                    CharacterMove characterMove = playerCharacter.GetComponent<CharacterMove>();
-                    if (cam != null) {
-                        mapViewer.SetActive(true);
-                        mapViewer.transform.position = characterMove.head.position;
-                        cam.target = mapViewer.transform;
-                        FpsCharacterController fpsChar = userInput.GetComponent<FpsCharacterController>();
-                        fpsChar.Target = mapViewer.GetComponent<CharacterRoot>();
-                        return;
-                    }
-                    cam = CharacterCamera.FindCameraTargettingChildOf(mapViewer.transform);
-                    if (cam != null) {
-                        mapViewer.SetActive(false);
-                        cam.target = characterMove.head;
-                        FpsCharacterController fpsChar = userInput.GetComponent<FpsCharacterController>();
-                        fpsChar.Target = playerCharacter.GetComponent<CharacterRoot>();
-                        return;
-                    }
-                    Debug.Log("CharacterCamera is not pointing at "+ playerCharacter+" or "+ mapViewer);
-                }
-                break;
+        if (context.phase != UnityEngine.InputSystem.InputActionPhase.Performed) { return; }
+        NonStandard.Character.UserController user = NonStandard.Character.UserController.GetUserCharacterController();
+        if (user.Target.gameObject == playerCharacter) {
+            mapViewer.transform.position = user.GetCameraTarget().position;
+            mapViewer.SetActive(true);
+            mapViewer.GetComponent<NonStandard.Character.CharacterRoot>().TakeControlOfUserInterface();
+            return;
         }
+        if (user.Target.gameObject == mapViewer) {
+            playerCharacter.GetComponent<NonStandard.Character.CharacterRoot>().TakeControlOfUserInterface();
+            mapViewer.SetActive(false);
+            return;
+        }
+        Debug.LogWarning("User is not controlling "+ playerCharacter+" or "+ mapViewer+"?");
+    }
+    public void ToggleControlsMessage(UnityEngine.InputSystem.InputAction.CallbackContext context) {
+        controlsMessage.SetActive(!controlsMessage.activeInHierarchy);
     }
 }

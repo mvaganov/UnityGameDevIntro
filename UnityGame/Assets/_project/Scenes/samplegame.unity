@@ -162,6 +162,7 @@ MonoBehaviour:
   playerCharacter: {fileID: 1936991135}
   missileShooter: {fileID: 359308959}
   actionButton: {fileID: 491638456}
+  controlsMessage: {fileID: 289816028}
   messageAboutShooting: {fileID: 550645904}
   youWinMessage: {fileID: 1904562045}
   mapViewer: {fileID: 56350902}
@@ -567,18 +568,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 705507996}
-        m_TargetAssemblyTypeName: NonStandard.Platform, com.codegiraffe.nonstandard.unityutility
-        m_MethodName: Unpause
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 289816028}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
@@ -658,15 +647,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 289816028}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f79d3b0e5c06424ea3f67e186b0f8f9, type: 3}
+  m_Script: {fileID: 11500000, guid: 359e59a4b133f4443bdc163c839eef2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onStart:
+  onEnable:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 705507996}
-        m_TargetAssemblyTypeName: NonStandard.Platform, com.codegiraffe.nonstandard.unityutility
+        m_TargetAssemblyTypeName: NonStandard.LifeCycle, com.codegiraffe.nonstandard.unityutility
         m_MethodName: Pause
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onDisable:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 705507996}
+        m_TargetAssemblyTypeName: NonStandard.LifeCycle, com.codegiraffe.nonstandard.unityutility
+        m_MethodName: Unpause
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1093,18 +1097,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 705507996}
-        m_TargetAssemblyTypeName: NonStandard.Platform, com.codegiraffe.nonstandard.unityutility
-        m_MethodName: Unpause
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 550645904}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
@@ -1424,15 +1416,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 550645904}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f79d3b0e5c06424ea3f67e186b0f8f9, type: 3}
+  m_Script: {fileID: 11500000, guid: 359e59a4b133f4443bdc163c839eef2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onStart:
+  onEnable:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 705507996}
-        m_TargetAssemblyTypeName: NonStandard.Platform, com.codegiraffe.nonstandard.unityutility
+        m_TargetAssemblyTypeName: NonStandard.LifeCycle, com.codegiraffe.nonstandard.unityutility
         m_MethodName: Pause
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onDisable:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 705507996}
+        m_TargetAssemblyTypeName: NonStandard.LifeCycle, com.codegiraffe.nonstandard.unityutility
+        m_MethodName: Unpause
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1710,7 +1717,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0.5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -2077,18 +2084,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 705507996}
-        m_TargetAssemblyTypeName: NonStandard.Platform, com.codegiraffe.nonstandard.unityutility
-        m_MethodName: Unpause
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 1904562045}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
@@ -2992,15 +2987,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 1904562045}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f79d3b0e5c06424ea3f67e186b0f8f9, type: 3}
+  m_Script: {fileID: 11500000, guid: 359e59a4b133f4443bdc163c839eef2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onStart:
+  onEnable:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 705507996}
-        m_TargetAssemblyTypeName: NonStandard.Platform, com.codegiraffe.nonstandard.unityutility
+        m_TargetAssemblyTypeName: NonStandard.LifeCycle, com.codegiraffe.nonstandard.unityutility
         m_MethodName: Pause
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onDisable:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 705507996}
+        m_TargetAssemblyTypeName: NonStandard.LifeCycle, com.codegiraffe.nonstandard.unityutility
+        m_MethodName: Unpause
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
