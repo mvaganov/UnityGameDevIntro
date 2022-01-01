@@ -1,7 +1,6 @@
 using NonStandard;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -19,23 +18,23 @@ public class CollidableRules : MonoBehaviour
 
     [System.Serializable] public class Rule {
         public string name;
-        public Collidable.Kind[] collider, collidee;
+        public Collidable.Kind collider, collidee;
         public UnityEvent_Collidable_Array onCollision = new UnityEvent_Collidable_Array();
         [System.Serializable] public class UnityEvent_Collidable_Array : UnityEvent<Collidable[]> { }
         public Rule(string name, Collidable.Kind collider, Collidable.Kind collidee, EventBind eventBind) :
-            this(name, new Collidable.Kind[] { collider }, new Collidable.Kind[] { collidee }, new EventBind[] { eventBind }) { }
+            this(name, collider, collidee, new EventBind[] { eventBind }) { }
         public Rule(string name, Collidable.Kind collider, Collidable.Kind collidee, UnityAction<Collidable[]> action) :
-            this(name, new Collidable.Kind[] { collider }, new Collidable.Kind[] { collidee }, new UnityAction<Collidable[]>[] { action }) { }
-        public Rule(string name, Collidable.Kind[] collider, Collidable.Kind[] collidee, EventBind[] eventBinds) {
+            this(name, collider, collidee, new UnityAction<Collidable[]>[] { action }) { }
+        public Rule(string name, Collidable.Kind collider, Collidable.Kind collidee, EventBind[] eventBinds) {
             this.name = name; this.collider = collider; this.collidee = collidee; Array.ForEach(eventBinds, e=>e.Bind(onCollision));
         }
-        public Rule(string name, Collidable.Kind[] collider, Collidable.Kind[] collidee, UnityAction<Collidable[]>[] actions) {
+        public Rule(string name, Collidable.Kind collider, Collidable.Kind collidee, UnityAction<Collidable[]>[] actions) {
             this.name = name; this.collider = collider; this.collidee = collidee;
             Array.ForEach(actions, action=>onCollision.AddListener(action));
         }
-        public bool AppliesTo(Collidable a, Collidable b) { return AppliesTo(a.kinds, b.kinds); }
-        public bool AppliesTo(Collidable.Kind[] a, Collidable.Kind[] b) {
-            return Enumerable.SequenceEqual(a, collider) && Enumerable.SequenceEqual(b, collidee);
+        public bool AppliesTo(Collidable collider, Collidable collidee) { return AppliesTo(collider.kind, collidee.kind); }
+        public bool AppliesTo(Collidable.Kind collider, Collidable.Kind collidee) {
+            return collider == this.collider && collidee == this.collidee;
         }
     }
     public List<Rule> collisionRules = new List<Rule>();
@@ -47,13 +46,13 @@ public class CollidableRules : MonoBehaviour
     void UpdateRuleLookupDictionary() {
         for (int i = 0; i < collisionRules.Count; i++) {
             Rule r = collisionRules[i];
-            if (!collisionRuleLookupTables.TryGetValue(r.collider[0], out Dictionary<Collidable.Kind, HashSet<Rule>> subLookupTable)) {
+            if (!collisionRuleLookupTables.TryGetValue(r.collider, out Dictionary<Collidable.Kind, HashSet<Rule>> subLookupTable)) {
                 subLookupTable = new Dictionary<Collidable.Kind, HashSet<Rule>>();
-                collisionRuleLookupTables[r.collider[0]] = subLookupTable;
+                collisionRuleLookupTables[r.collider] = subLookupTable;
             }
-            if (!subLookupTable.TryGetValue(r.collidee[0], out HashSet<Rule> ruleSet)) {
+            if (!subLookupTable.TryGetValue(r.collidee, out HashSet<Rule> ruleSet)) {
                 ruleSet = new HashSet<Rule>();
-                subLookupTable[r.collidee[0]] = ruleSet;
+                subLookupTable[r.collidee] = ruleSet;
             }
             ruleSet.Add(r);
         }
@@ -75,7 +74,7 @@ public class CollidableRules : MonoBehaviour
     /// <param name="rule"></param>
     /// <returns>true if added, false if not added</returns>
     public bool AddIfMissing(Rule rule) {
-        List<Rule> rules = GetRules(rule.collider, rule.collidee);
+        List<Rule> rules = GetRule(rule.collider, rule.collidee);
         if (rules != null && rules.Count > 0) {
             return false;
         }
@@ -88,7 +87,7 @@ public class CollidableRules : MonoBehaviour
     /// <param name="rule"></param>
     /// <returns>true if added, false if not added</returns>
     public bool AddIfMissingNamed(Rule rule) {
-        List<Rule> rules = GetRules(rule.collider, rule.collidee);
+        List<Rule> rules = GetRule(rule.collider, rule.collidee);
         if (rules != null && rules.Count > 0) {
             Rule found = rules.Find(r=>r.name == rule.name);
             if (found != null) {
@@ -98,11 +97,11 @@ public class CollidableRules : MonoBehaviour
         Add(rule);
         return true;
     }
-    public List<Rule> GetRules(Collidable a, Collidable b) { return GetRules(a.kinds, b.kinds); }
-    public List<Rule> GetRules(Collidable.Kind[] a, Collidable.Kind[] b) {
+    public List<Rule> GetRule(Collidable a, Collidable b) { return GetRule(a.kind, b.kind); }
+    public List<Rule> GetRule(Collidable.Kind a, Collidable.Kind b) {
         List<Rule> foundRules = null;
-        if (collisionRuleLookupTables.TryGetValue(a[0], out var subDictionary)) {
-            if (subDictionary.TryGetValue(b[0], out var ruleset)) {
+        if (collisionRuleLookupTables.TryGetValue(a, out var subDictionary)) {
+            if (subDictionary.TryGetValue(b, out var ruleset)) {
                 foreach (Rule r in ruleset) {
                     if (r.AppliesTo(a, b)) {
                         if (foundRules == null) { foundRules = new List<Rule>(); }

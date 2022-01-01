@@ -20,7 +20,7 @@ namespace Game1 {
 				Down  = new Coord(0, 1),
 				Right = new Coord(1, 0);
 			public static Coord[] Directions = new Coord[] { Up, Left, Down, Right };
-        }
+		}
 		public class Entity {
 			public Coord position;
 			public Coord direction;
@@ -36,8 +36,8 @@ namespace Game1 {
 			}
 			public void Move() {
 				position += direction;
-            }
-        }
+			}
+		}
 		public static void Main(string[] args) {
 			string mapStr =
 			"..............................\n" +
@@ -78,7 +78,7 @@ namespace Game1 {
 				}
 				for (int i = 0; i < entities.Count; ++i) {
 					entities[i].Draw();
-                }
+				}
 				Console.SetCursorPosition(0, mapSize.y);
 				ConsoleKeyInfo userInput = Console.ReadKey();
 				player.direction = Coord.Zero;
@@ -96,7 +96,7 @@ namespace Game1 {
 					if (!entities[i].position.IsInside(mapSize)) {
 						entities[i].position = prev;
 					}
-                }
+				}
 			}
 		}
 	}

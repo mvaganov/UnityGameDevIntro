@@ -221,8 +221,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionRules:
   - name: touching the goal object ends the game
-    collider: 04000000
-    collidee: 06000000
+    collider: 0
+    collidee: 0
     onCollision:
       m_PersistentCalls:
         m_Calls:
@@ -239,8 +239,8 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
   - name: maze traveller marks floor
-    collider: 04000000
-    collidee: 01000000
+    collider: 0
+    collidee: 0
     onCollision:
       m_PersistentCalls:
         m_Calls:
@@ -257,8 +257,8 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
   - name: MrV makes the player a wizard
-    collider: 04000000
-    collidee: 05000000
+    collider: 0
+    collidee: 0
     onCollision:
       m_PersistentCalls:
         m_Calls:
@@ -275,8 +275,8 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
   - name: missile destroys walls
-    collider: 03000000
-    collidee: 02000000
+    collider: 0
+    collidee: 0
     onCollision:
       m_PersistentCalls:
         m_Calls:
@@ -427,7 +427,7 @@ Transform:
   m_Children:
   - {fileID: 1956256734}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &56350906
 MonoBehaviour:
@@ -754,7 +754,7 @@ RectTransform:
   m_Children:
   - {fileID: 744799756}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1050,7 +1050,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -100, y: 100}
+  m_AnchoredPosition: {x: 5, y: 5}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &452333324
@@ -1400,7 +1400,7 @@ RectTransform:
   m_Children:
   - {fileID: 613902695}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1640,7 +1640,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -200, y: -200}
+  m_SizeDelta: {x: -40, y: -40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &640673297
 MonoBehaviour:
@@ -1673,12 +1673,15 @@ MonoBehaviour:
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
+    m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'You''re a Wizard!
+  m_Text: 'Don''t you know?
+
+    You''re a Wizard!
 
 
-    Click to shoot <color=#f00>magic missiles</color>!'
+    Click to shoot <color=#f00>magic
+    missiles</color>!'
 --- !u!222 &640673298
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2398,7 +2401,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3060bff42c6d5264195cd115fa4874e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  kinds: 05000000
+  kind: 5
 --- !u!1 &1185228745
 GameObject:
   m_ObjectHideFlags: 0
@@ -2557,7 +2560,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3060bff42c6d5264195cd115fa4874e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  kinds: 06000000
+  kind: 6
 --- !u!136 &1305947154
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2633,7 +2636,7 @@ Transform:
   m_LocalScale: {x: 20, y: 20, z: 20}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!4 &1360363766 stripped
 Transform:
@@ -2753,7 +2756,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -759, y: 36}
+  m_SizeDelta: {x: -480.25, y: 36}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1588219762
 MonoBehaviour:
@@ -3094,7 +3097,7 @@ RectTransform:
   m_Children:
   - {fileID: 1568311054}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -3225,7 +3228,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3060bff42c6d5264195cd115fa4874e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  kinds: 04000000
+  kind: 4
 --- !u!4 &1936991141 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8380686396385984218, guid: 53b569fa1ec508e4ea6d0cb74a221a01, type: 3}
@@ -3519,6 +3522,34 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1988414674, guid: 53b569fa1ec508e4ea6d0cb74a221a01, type: 3}
+      propertyPath: OnZoomInputChange.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1988414674, guid: 53b569fa1ec508e4ea6d0cb74a221a01, type: 3}
+      propertyPath: OnZoomInputChange.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1988414674, guid: 53b569fa1ec508e4ea6d0cb74a221a01, type: 3}
+      propertyPath: OnZoomInputChange.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2123092153}
+    - target: {fileID: 1988414674, guid: 53b569fa1ec508e4ea6d0cb74a221a01, type: 3}
+      propertyPath: OnZoomInputChange.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1988414674, guid: 53b569fa1ec508e4ea6d0cb74a221a01, type: 3}
+      propertyPath: OnZoomInputChange.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetStickPositionFrominput
+      objectReference: {fileID: 0}
+    - target: {fileID: 1988414674, guid: 53b569fa1ec508e4ea6d0cb74a221a01, type: 3}
+      propertyPath: OnZoomInputChange.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: NonStandard.Inputs.OnScreenStickAnimated, com.codegiraffe.nonstandard.input
+      objectReference: {fileID: 0}
+    - target: {fileID: 1988414674, guid: 53b569fa1ec508e4ea6d0cb74a221a01, type: 3}
+      propertyPath: OnZoomInputChange.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 175037271537139316, guid: 53b569fa1ec508e4ea6d0cb74a221a01, type: 3}
       propertyPath: inputBindings.Array.data[0].name
       value: Player/Move
@@ -3541,7 +3572,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3672167016036120268, guid: 53b569fa1ec508e4ea6d0cb74a221a01, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8380686396385984218, guid: 53b569fa1ec508e4ea6d0cb74a221a01, type: 3}
       propertyPath: m_RootOrder
@@ -3593,6 +3624,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 53b569fa1ec508e4ea6d0cb74a221a01, type: 3}
+--- !u!114 &2123092153 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2844150189709657216, guid: 53b569fa1ec508e4ea6d0cb74a221a01, type: 3}
+  m_PrefabInstance: {fileID: 2108256206}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 718c6dc69bebf934e873e9026f68224c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2141296975
 GameObject:
   m_ObjectHideFlags: 0

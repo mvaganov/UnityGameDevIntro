@@ -38,7 +38,7 @@ namespace MrV {
 		}
 		void PlayerMove(Coord dir) {
 			player.SetVelocity(dir);
-			KeepPointOnScreen(player.position + dir);
+			base.KeepPointOnScreen(player.position + dir);
 		}
 		protected override void InitData() {
 			InitMaze();
@@ -54,33 +54,31 @@ namespace MrV {
 		}
 		private Coord lastValidPlayerDirection = Coord.Zero;
 		void InitEntities() {
-			player = new EntityMobileObject("player", new ConsoleTile('@', ConsoleColor.Green), new Coord(1, 1));
-			player.onUpdate = () => {
+			player = new EntityMobileObject("player", new ConsoleTile('@', ConsoleColor.Green), new Coord(1, 1), () => {
 				if (player.velocity != Coord.Zero) {
 					lastValidPlayerDirection = player.velocity;
 				}
 				player.velocity = Coord.Zero;
-			};
-			mrv = new EntityMobileObject("Mr.V", new ConsoleTile('V', ConsoleColor.Cyan), new Coord(3, 3));
+			});
 			int nextMove = 0;
 			Random randomNumberGenerator = new Random();
-			mrv.onUpdate = () => {
+			mrv = new EntityMobileObject("Mr.V", new ConsoleTile('V', ConsoleColor.Cyan), new Coord(3, 3), () => {
 				mrv.velocity = Coord.Zero;
 				if (Environment.TickCount > nextMove) {
 					Coord dir = Coord.CardinalDirections[randomNumberGenerator.Next() % Coord.CardinalDirections.Length];
 					mrv.SetVelocity(dir);
 					nextMove = Environment.TickCount + 100;
 				}
-			};
+			});
 			goal = new EntityBasic("goal", new ConsoleTile('g', ConsoleColor.Yellow), map.GetSize() - Coord.Two);
-			AddToLists(player);
-			AddToLists(mrv);
-			AddToLists(goal);
+			base.AddToLists(player);
+			base.AddToLists(mrv);
+			base.AddToLists(goal);
 		}
 		void InitCollisionRules() {
-			AddCollisionRule(new CollisionRule("Map/Entity", typeof(Map2d), typeof(EntityMobileObject), EntityOnMap));
-			AddCollisionRule(new CollisionRule("Entity/Entity", typeof(EntityMobileObject), typeof(EntityMobileObject), EntityToEntity));
-			AddCollisionRule(new CollisionRule("Entity/EntityBasic", typeof(EntityMobileObject), typeof(EntityBasic), EntityToBasicEntity));
+			base.AddCollisionRule(new CollisionRule("Map/Entity", typeof(Map2d), typeof(EntityMobileObject), EntityOnMap));
+			base.AddCollisionRule(new CollisionRule("Entity/Entity", typeof(EntityMobileObject), typeof(EntityMobileObject), EntityToEntity));
+			base.AddCollisionRule(new CollisionRule("Entity/EntityBasic", typeof(EntityMobileObject), typeof(EntityBasic), EntityToBasicEntity));
 		}
 		void EntityOnMap(object mapObject, object mobObject) {
 			EntityMobileObject mob = (EntityMobileObject)mobObject;
@@ -118,10 +116,10 @@ namespace MrV {
 			}
 		}
 		void ShootMagicMissle(ConsoleTile tile, Coord position, Coord direction) {
-			EntityMobileObject missile = new EntityMobileObject("magic missile", tile, position);
 			int nextMove = 0;
 			long timelimit = Environment.TickCount + 3000;
-			missile.onUpdate = () => {
+			EntityMobileObject missile = null;
+			missile = new EntityMobileObject("magic missile", tile, position, () => {
 				if (Environment.TickCount > timelimit) { Destroy(missile); }
 				if (Environment.TickCount > nextMove) {
 					nextMove = Environment.TickCount + 50;
@@ -129,8 +127,8 @@ namespace MrV {
 				} else {
 					missile.SetVelocity(Coord.Zero);
 				}
-			};
-			AddToLists(missile);
+			});
+			base.AddToLists(missile);
 		}
 		void EntityToBasicEntity(object mobObject, object basicObject) {
 			EntityMobileObject mob = (EntityMobileObject)mobObject;
@@ -149,7 +147,7 @@ namespace MrV {
 			Rect area = new Rect(insetSize, insetSize, width, screenSize.row - insetSize * 2);
 			Coord inset = new Coord(insetSize, insetSize / 2);
 			ConsoleTile messageBack = new ConsoleTile('.', ConsoleColor.Black, ConsoleColor.DarkGray);
-			MessageBox(message, textColor, area, messageBack, inset);
+			base.MessageBox(message, textColor, area, messageBack, inset);
 		}
 	}
 }
