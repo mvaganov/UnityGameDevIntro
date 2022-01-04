@@ -1,4 +1,5 @@
 using System;
+
 namespace Game0 {
 	class Program {
 		public static void Main(string[] args) {

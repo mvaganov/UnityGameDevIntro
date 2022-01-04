@@ -36,6 +36,7 @@ namespace Game1 {
 			}
 			public void Move() {
 				position += direction;
+				direction = Coord.Zero;
 			}
 		}
 		public static void Main(string[] args) {
@@ -81,7 +82,6 @@ namespace Game1 {
 				}
 				Console.SetCursorPosition(0, mapSize.y);
 				ConsoleKeyInfo userInput = Console.ReadKey();
-				player.direction = Coord.Zero;
 				switch (userInput.KeyChar) {
 					case 'w': player.direction = Coord.Up; break;
 					case 'a': player.direction = Coord.Left; break;

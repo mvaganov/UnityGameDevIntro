@@ -34,7 +34,7 @@ namespace MrV {
 			if (Contains(p)) return Coord.Zero;
 			Coord b = ClosestPoint(p);
 			return p - b;
-        }
+		}
 		public Coord ClosestPoint(Coord p) {
 			Coord b = p;
 			if (p.X <= min.X) { b.X = min.X; }

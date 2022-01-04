@@ -221,8 +221,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionRules:
   - name: touching the goal object ends the game
-    collider: 0
-    collidee: 0
+    collider: 4
+    collidee: 6
+    deactivated: 0
     onCollision:
       m_PersistentCalls:
         m_Calls:
@@ -239,8 +240,9 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
   - name: maze traveller marks floor
-    collider: 0
-    collidee: 0
+    collider: 4
+    collidee: 1
+    deactivated: 0
     onCollision:
       m_PersistentCalls:
         m_Calls:
@@ -257,8 +259,9 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
   - name: MrV makes the player a wizard
-    collider: 0
-    collidee: 0
+    collider: 4
+    collidee: 5
+    deactivated: 0
     onCollision:
       m_PersistentCalls:
         m_Calls:
@@ -275,13 +278,14 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
   - name: missile destroys walls
-    collider: 0
-    collidee: 0
+    collider: 3
+    collidee: 2
+    deactivated: 0
     onCollision:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 40891333}
-          m_TargetAssemblyTypeName: CollidableRules, Assembly-CSharp
+          m_TargetAssemblyTypeName: CollisionRules, Assembly-CSharp
           m_MethodName: DestroyBoth
           m_Mode: 0
           m_Arguments:
@@ -292,6 +296,18 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+  collisionTagEditor:
+    collisionTags:
+    - None
+    - Floor
+    - Wall
+    - MagicMissile
+    - Player
+    - MrV
+    - Goal
+    - AnotherThing
+    refreshList: 0
+    writeList: 0
 --- !u!1 &56350902
 GameObject:
   m_ObjectHideFlags: 0
@@ -321,83 +337,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 56350902}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9946da85399cde7459691bf4813d6c1a, type: 3}
+  m_Script: {fileID: 11500000, guid: c71d3c6b514a50047aa18a2c7339550d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 0}
-  head: {fileID: 56350905}
-  move:
-    speed: 50
-    maxStableAngle: 60
-    automaticMovement:
-      targetPosition: {x: 0, y: 0, z: 0}
-      closeEnough: 0
-      enabled: 0
-      jumpAtObstacle: 0
-      arrived: 0
-    disabled: 0
-    canMoveInAir: 1
-    lookForwardMoving: 1
-    maintainSpeedAgainstWall: 0
-    systemMovement: 0
-    IsStableOnGround: 0
-    StrafeRightMovement: 0
-    MoveForwardMovement: 0
-    MoveDirection: {x: 0, y: 0, z: 0}
-    groundNormal: {x: 0, y: 0, z: 0}
-    OppositionDirection: {x: 0, y: 0, z: 0}
-    LastVelocity: {x: 0, y: 0, z: 0}
-    LastOppositionDirection: {x: 0, y: 0, z: 0}
-    orientationTransform: {fileID: 1360363766}
-  jump:
-    isJumping: 0
-    peaked: 0
-    heightSet: 0
-    pressed: 0
-    showJumpArc: 0
-    forgiveLateJumps: 1
-    enabled: 0
-    min: 0.125
-    max: 1.5
-    fullPressDuration: 0.25
-    doubleJumps: 0
-    TimedJumpPress: 0
-    targetJumpHeight: 0
-    position: {x: 0, y: 0, z: 0}
-    usedDoubleJumps: 0
-    OnJumpPowerProgress:
-      m_PersistentCalls:
-        m_Calls: []
-  action:
-    input: 0
-    firePressed:
-      m_PersistentCalls:
-        m_Calls: []
-    fireReleased:
-      m_PersistentCalls:
-        m_Calls: []
-  callbacks:
-    moveDirectionChanged:
-      m_PersistentCalls:
-        m_Calls: []
-    stand:
-      m_PersistentCalls:
-        m_Calls: []
-    jumped:
-      m_PersistentCalls:
-        m_Calls: []
-    fall:
-      m_PersistentCalls:
-        m_Calls: []
-    wallCollisionStart:
-      m_PersistentCalls:
-        m_Calls: []
-    wallCollisionStopped:
-      m_PersistentCalls:
-        m_Calls: []
-    arrived:
-      m_PersistentCalls:
-        m_Calls: []
+  data: {fileID: 0}
+  rootTransform: {fileID: 56350905}
+  rb: {fileID: 56350904}
+  head: {fileID: 0}
+  body: {fileID: 0}
+  abilities: {fileID: 0}
+  jump: {fileID: 0}
+  move: {fileID: 56350906}
+  automove: {fileID: 0}
+  callbacks: {fileID: 0}
 --- !u!54 &56350904
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -438,11 +390,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 56350902}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39cd39337c9e20a4aa7bde5085c5f831, type: 3}
+  m_Script: {fileID: 11500000, guid: 30376fee39c1c754cb416c44f8f20bf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  move: {fileID: 56350903}
-  data: {fileID: 0}
+  root: {fileID: 0}
+  speed: 50
+  maxStableAngle: 60
+  cameraTransform: {fileID: 0}
+  canMoveInAir: 1
+  lookForwardMoving: 1
+  maintainSpeedAgainstWall: 0
+  systemMovement: 0
+  strafeRightMovement: 0
+  moveForwardMovement: 0
+  MoveDirection: {x: 0, y: 0, z: 0}
+  groundNormal: {x: 0, y: 0, z: 0}
+  OppositionDirection: {x: 0, y: 0, z: 0}
+  LastVelocity: {x: 0, y: 0, z: 0}
+  LastOppositionDirection: {x: 0, y: 0, z: 0}
 --- !u!114 &56350907
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2638,11 +2603,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
---- !u!4 &1360363766 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1988414672, guid: 53b569fa1ec508e4ea6d0cb74a221a01, type: 3}
-  m_PrefabInstance: {fileID: 2108256206}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1568311053
 GameObject:
   m_ObjectHideFlags: 0
@@ -3522,34 +3482,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1988414674, guid: 53b569fa1ec508e4ea6d0cb74a221a01, type: 3}
-      propertyPath: OnZoomInputChange.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1988414674, guid: 53b569fa1ec508e4ea6d0cb74a221a01, type: 3}
-      propertyPath: OnZoomInputChange.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1988414674, guid: 53b569fa1ec508e4ea6d0cb74a221a01, type: 3}
-      propertyPath: OnZoomInputChange.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 2123092153}
-    - target: {fileID: 1988414674, guid: 53b569fa1ec508e4ea6d0cb74a221a01, type: 3}
-      propertyPath: OnZoomInputChange.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1988414674, guid: 53b569fa1ec508e4ea6d0cb74a221a01, type: 3}
-      propertyPath: OnZoomInputChange.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetStickPositionFrominput
-      objectReference: {fileID: 0}
-    - target: {fileID: 1988414674, guid: 53b569fa1ec508e4ea6d0cb74a221a01, type: 3}
-      propertyPath: OnZoomInputChange.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: NonStandard.Inputs.OnScreenStickAnimated, com.codegiraffe.nonstandard.input
-      objectReference: {fileID: 0}
-    - target: {fileID: 1988414674, guid: 53b569fa1ec508e4ea6d0cb74a221a01, type: 3}
-      propertyPath: OnZoomInputChange.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     - target: {fileID: 175037271537139316, guid: 53b569fa1ec508e4ea6d0cb74a221a01, type: 3}
       propertyPath: inputBindings.Array.data[0].name
       value: Player/Move
@@ -3571,6 +3503,10 @@ PrefabInstance:
       value: MouseLook/MouseLook
       objectReference: {fileID: 0}
     - target: {fileID: 3672167016036120268, guid: 53b569fa1ec508e4ea6d0cb74a221a01, type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3993743127753215430, guid: 53b569fa1ec508e4ea6d0cb74a221a01, type: 3}
       propertyPath: m_RootOrder
       value: 6
       objectReference: {fileID: 0}
@@ -3622,19 +3558,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: player character
       objectReference: {fileID: 0}
+    - target: {fileID: 8380686396385984222, guid: 53b569fa1ec508e4ea6d0cb74a221a01, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 53b569fa1ec508e4ea6d0cb74a221a01, type: 3}
---- !u!114 &2123092153 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2844150189709657216, guid: 53b569fa1ec508e4ea6d0cb74a221a01, type: 3}
-  m_PrefabInstance: {fileID: 2108256206}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 718c6dc69bebf934e873e9026f68224c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2141296975
 GameObject:
   m_ObjectHideFlags: 0

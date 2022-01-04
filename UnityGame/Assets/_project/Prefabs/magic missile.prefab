@@ -153,4 +153,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82816abf51a015d489df2c03e281ab30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifetime: 3
+  time: 3
+  _event:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: -7598498322106280994}
+        m_TargetAssemblyTypeName: NonStandard.Utility.TimedDestroy, com.codegiraffe.nonstandard.unityutility
+        m_MethodName: DestroySelf
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2

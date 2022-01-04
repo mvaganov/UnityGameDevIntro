@@ -121,7 +121,7 @@ namespace MrV {
 			int lineWidth = 0;
 			for (int i = 0; i < text.Length; ++i) {
 				char c = text[i];
-                switch (c) {
+				switch (c) {
 					case '\r': continue; // ignore linefeed
 					case '\n': if (i == text.Length - 1) { continue; } // ignore EOF trailing newline
 						size.row++;
@@ -139,7 +139,7 @@ namespace MrV {
 			Coord cursor = Coord.Zero;
 			for (int i = 0; i < text.Length; ++i) {
 				char c = text[i];
-                switch (c) {
+				switch (c) {
 					case '\r': continue; // ignore linefeed
 					case '\n': if (i == text.Length - 1) { continue; } // ignore EOF trailing newline
 						cursor.row++;

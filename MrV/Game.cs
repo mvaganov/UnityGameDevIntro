@@ -4,7 +4,7 @@ namespace MrV {
 	public class Game : CommandLineGameEngine {
 		EntityMobileObject player, mrv;
 		EntityBasic goal;
-        protected override void InitScreen(out Coord size, out char defaultCharacter) {
+		protected override void InitScreen(out Coord size, out char defaultCharacter) {
 			size = new Coord(60, 20);
 			defaultCharacter = '\0';
 		}
