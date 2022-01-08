@@ -2,7 +2,11 @@
 
 ## Game0 - procedural basics
 
-* basic game code
+* demonstrate: how to compile and run C# code in the command line
+
+* demonstrate: changing which project is used as Main by editing &lt;StartupObject&gt; in the csproj file.
+
+* demonstrate: basic game code
 	- ``Console.Write``
 	- ``Console.SetCursorPosition``
 	- ``Console.ReadKey`` which returns ``ConsoleKeyInfo``
@@ -13,22 +17,22 @@ _ASSIGN: win condition, when the player reaches some specific tile_
 
 ## Game1 - OOP
 
-* Coord class
+* lecture: Coord class
 	- overloaded operator
 	- static array
 	- readonly vs const
 
-* Entity class
+* lecture: Entity class
 	- Coord as a direction instead of a position
 	- ConsoleColor
 
-* C#'s alternate 2d array notation ``[,]``
+* lecture: C#'s alternate 2d array notation ``[,]``
 
-* C#'s List class, which uses generics. analagous to C++'s vector class.
+* lecture: C#'s List class, which uses generics. analagous to C++'s vector class, or Java's ArrayList.
 
-* the concept of a display list
+* demonstrate: the concept of a display list
 
-* show how to detect what character the player is standing on
+* demonstrate: show how to detect what character the player is standing on
 
 _ASSIGN: implement win condition of player meeting the NPC_
 
@@ -40,53 +44,60 @@ _ASSIGN: implement collision detection against NPCs, so they can't share the sam
 
 ## Game1_1 - realtime
 
-* making the game realtime by checking if input exists
+* demonstrate: making the game realtime by checking if input exists
+	- ``if (Console.KeyAvailable)``
 
-* show ``System.Threading.Thread.Sleep``, compare against a loop watching the time ``System.Environment.TickCount``
+* demonstrate: ``System.Threading.Thread.Sleep``, compare against a loop watching the time ``System.Environment.TickCount``
 
-* implementing a timer in general
+* demonstrate: implementing a timer in general
 	- show a message after a duration
 	- prevent player from moving till a time stamp is reached
 
-_ASSIGN: give the NPC a delay between moves_
+_ASSIGN: make the game real-time and give the NPC a delay between moves_
 
-_ASSIGN: reimplement the win condition, this time with a timer._
+_ASSIGN: reimplement the win condition, this time with a timer that gives success if the player reaches the goal in 1 minute, and a non-victory message if the goal is reached after 1 minute._
 
 ## Game2 - engine
 
-* walk through structure basics
+* lecture: walk through structure basics
 	- explain the double-buffering mechanism for draw performance
 
-* message box on a timer
+* demonstrate: message box on a timer
+
+* demonstrate: changing the maze
 
 _ASSIGN: change the map size, or load another map of your choice_
 
-_ASSIGN: add limit to magic missle_
+_ASSIGN: implement limited 'ammo' for the magic missle_
 
-_ASSIGN: a bomb item that has an effect: touch it and after 5 seconds, all of the nearby walls are destroyed._
+_ASSIGN: a bomb item that has an effect: walk onto it and after 5 seconds, all of the nearby walls are destroyed._
 
-_ASSIGN: more moving entities_
+_ASSIGN: if the player is caught in a bomb explosion, the game should restart._
+
+_ASSIGN: add more moving entities, with delays between moves_
 
 _ASSIGN: make some entities move intentionally toward or away from the player_
 
-_ASSIGN: add bombs that can be picked up and added to a player's inventory. the player can then place these bombs on the map_
+_ASSIGN: add bombs that can be picked up and added to a player's inventory, then the player can then place these bombs on the map_
 
 _ASSIGN: create a special item that lets the player shoot fireballs, which fly like magic missiles, and explode like bombs_
 
-_ASSIGN: create a boss monster, who shoots fireballs_
+_ASSIGN: create a boss monster, who shoots fireballs, which can harm the player_
 
 ## getting started with Unity
 
-* intro
+* lecture: Unity intro
 	* UI basics
 	* MrV's character controller
+
+* demonstrate: collision detection
 
 _ASSIGN: make a parkour level_
 
 ## UnityGame - Game2 in Unity
 
-* walk through structure, show parallels
+* lecture: walk through structure, show parallels with command line game
 
-* drawing lines in 3d
+* demonstrate: drawing lines in 3d
 
 _ASSIGN: do the same thing from Game2, except in Unity_
