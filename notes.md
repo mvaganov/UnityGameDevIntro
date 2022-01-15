@@ -2,20 +2,25 @@
 
 ## Game0 - procedural basics
 
-* demonstrate: how to compile and run C# code in the command line
-
-* demonstrate: changing which project is used as Main by editing &lt;StartupObject&gt; in the csproj file.
-
 * demonstrate: basic game code
 	- ``Console.Write``
 	- ``Console.SetCursorPosition``
 	- ``Console.ReadKey`` which returns ``ConsoleKeyInfo``
+
+* lecture: parts of a game engine
+	- initialization
+	- game loop
+		- draw
+		- user input
+		- update
 
 _ASSIGN: embelish with if statements for boundary conditions_
 
 _ASSIGN: win condition, when the player reaches some specific tile_
 
 ## Game1 - OOP
+
+* demonstrate: changing which project is used as Main by editing &lt;StartupObject&gt; in the csproj file.
 
 * lecture: Coord class
 	- overloaded operator
@@ -28,19 +33,17 @@ _ASSIGN: win condition, when the player reaches some specific tile_
 
 * lecture: C#'s alternate 2d array notation ``[,]``
 
-* lecture: C#'s List class, which uses generics. analagous to C++'s vector class, or Java's ArrayList.
-
-* demonstrate: the concept of a display list
+* demonstrate: display list using C#'s List class, which uses generics. analagous to C++'s vector class, or Java's ArrayList.
 
 * demonstrate: show how to detect what character the player is standing on
 
 _ASSIGN: implement win condition of player meeting the NPC_
 
-_ASSIGN: implement collision detection against walls._
+_ASSIGN: implement collision detection against walls in the 2d array._
 
-_ASSIGN: implement another NPC with a lose condition if the player meets them._
+_ASSIGN: (bonus) implement another NPC with a lose condition if the player meets them._
 
-_ASSIGN: implement collision detection against NPCs, so they can't share the same space._
+_ASSIGN: (bonus) implement collision detection against NPCs, so they can't share the same space._
 
 ## Game1_1 - realtime
 
