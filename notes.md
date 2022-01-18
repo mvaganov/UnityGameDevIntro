@@ -43,6 +43,8 @@ _ASSIGN: implement collision detection against walls in the 2d array._
 
 _ASSIGN: (bonus) implement another NPC with a lose condition if the player meets them._
 
+_ASSIGN: (bonus) implement an item that the player can defeat an NPC with if they get it first._
+
 _ASSIGN: (bonus) implement collision detection against NPCs, so they can't share the same space._
 
 ## Game1_1 - realtime
