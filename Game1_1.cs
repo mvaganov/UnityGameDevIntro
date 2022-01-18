@@ -2,10 +2,6 @@ using System;
 using System.Collections.Generic;
 
 namespace Game1_1 {
-	// TODO collision detection. priori vs postori
-	// TODO add an item
-	// TODO change collision detection after item pickup
-	// TODO update logic for entities
 	class Program {
 		public struct Coord {
 			public short x, y;
