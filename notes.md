@@ -47,6 +47,12 @@ _ASSIGN: (bonus) implement an item that the player can defeat an NPC with if the
 
 _ASSIGN: (bonus) implement collision detection against multiple NPCs, so they can't share the same space._
 
+_ASSIGN: (EXTRA BONUS) load a map from a file instead of the string_
+
+_ASSIGN: (SUPER BONUS) create 'doors' on the map that can be opened with collected keys_
+
+_ASSIGN: (MEGA BONUS) create logic that allows the map to change if the player reaches a specific tile or Entity_
+
 ## Game1_1 - realtime
 
 * demonstrate: making the game realtime by checking if input exists
