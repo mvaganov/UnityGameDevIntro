@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 
 namespace Game1 {
-	// TODO collision detection. priori vs postori
-	// TODO add an item
-	// TODO change collision detection after item pickup
-	// TODO update logic for entities
+	// ASSIGN: implement collision detection against '#' walls in the 2d array.
+	// ASSIGN: implement win condition of player meeting the NPC
+	// ASSIGN: (bonus) implement another NPC with a lose condition if the player meets them.
+	// ASSIGN: (bonus) implement an item that the player can defeat an NPC with if they get it first.
+	// ASSIGN: (bonus) implement collision detection against multiple NPCs, so they can't share the same space.
 	class Program {
 		public struct Coord {
 			public short x, y;
