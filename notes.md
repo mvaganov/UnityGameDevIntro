@@ -55,6 +55,8 @@ _ASSIGN: (MEGA BONUS) create logic that allows the map to change if the player r
 
 ## Game1_1 - realtime
 
+* demonstrate: ``System.Environment.TickCount``
+
 * demonstrate: making the game realtime by checking if input exists
 	- ``if (Console.KeyAvailable)``
 
