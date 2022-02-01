@@ -75,9 +75,11 @@ _ASSIGN: reimplement the win condition, this time with a timer that gives succes
 * lecture: walk through structure basics
 	- explain the double-buffering mechanism for draw performance
 
-* demonstrate: message box on a timer
+* demonstrate: making and picking up 'coins'
 
 * demonstrate: changing the maze
+
+* demonstrate: message box on a timer
 
 _ASSIGN: change the map size, or load another map of your choice_
 
