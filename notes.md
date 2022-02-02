@@ -70,10 +70,17 @@ _ASSIGN: make the game real-time and give the NPC a delay between moves_
 
 _ASSIGN: reimplement the win condition, this time with a timer that gives success if the player reaches the goal in 1 minute, and a non-victory message if the goal is reached after 1 minute._
 
+## Lambda Expressions for Game Development
+
+* demonstrate: lambda expression in earlier game: entity specific game logic
+
+_ASSIGN: move all game win/loss logic out of the Update function and into lambda-expressions that are specific to the player or NPC_
+
 ## Game2 - engine
 
-* lecture: walk through structure basics
+* lecture: new code, walk through structure basics
 	- explain the double-buffering mechanism for draw performance
+	- demonstrate: change the screen size
 
 * demonstrate: making and picking up 'coins'
 
