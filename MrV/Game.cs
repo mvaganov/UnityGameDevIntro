@@ -54,16 +54,16 @@ namespace MrV {
 		}
 		private Coord lastValidPlayerDirection = Coord.Zero;
 		void InitEntities() {
-			player = new EntityMobileObject("player", new ConsoleTile('@', ConsoleColor.Green), new Coord(1, 1), () => {
-				if (player.velocity != Coord.Zero) {
-					lastValidPlayerDirection = player.velocity;
+			player = new EntityMobileObject("player", new ConsoleTile('@', ConsoleColor.Green), new Coord(1, 1), (self) => {
+				if (self.velocity != Coord.Zero) {
+					lastValidPlayerDirection = self.velocity;
 				}
-				player.velocity = Coord.Zero;
+				self.velocity = Coord.Zero;
 			});
 			int nextMove = 0;
 			Random randomNumberGenerator = new Random();
-			mrv = new EntityMobileObject("Mr.V", new ConsoleTile('V', ConsoleColor.Cyan), new Coord(3, 3), () => {
-				mrv.velocity = Coord.Zero;
+			mrv = new EntityMobileObject("Mr.V", new ConsoleTile('V', ConsoleColor.Cyan), new Coord(3, 3), (self) => {
+				self.velocity = Coord.Zero;
 				if (Environment.TickCount > nextMove) {
 					Coord dir = Coord.CardinalDirections[randomNumberGenerator.Next() % Coord.CardinalDirections.Length];
 					mrv.SetVelocity(dir);
@@ -119,13 +119,13 @@ namespace MrV {
 			int nextMove = 0;
 			long timelimit = Environment.TickCount + 3000;
 			EntityMobileObject missile = null;
-			missile = new EntityMobileObject("magic missile", tile, position, () => {
+			missile = new EntityMobileObject("magic missile", tile, position, (self) => {
 				if (Environment.TickCount > timelimit) { Destroy(missile); }
 				if (Environment.TickCount > nextMove) {
 					nextMove = Environment.TickCount + 50;
-					missile.SetVelocity(direction);
+					self.SetVelocity(direction);
 				} else {
-					missile.SetVelocity(Coord.Zero);
+					self.SetVelocity(Coord.Zero);
 				}
 			});
 			base.AddToLists(missile);

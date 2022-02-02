@@ -30,16 +30,16 @@ namespace MrV {
 		public char currentMove;
 		public Coord lastValidPosition;
 		public Coord velocity;
-		public Action onUpdate;
+		public Action<EntityMobileObject> onUpdate;
 		public EntityMobileObject() { }
-		public EntityMobileObject(string name, ConsoleTile icon, Coord position, Action onUpdate) : base(name, icon, position) {
+		public EntityMobileObject(string name, ConsoleTile icon, Coord position, Action<EntityMobileObject> onUpdate) : base(name, icon, position) {
 			lastValidPosition = position;
 			this.onUpdate = onUpdate;
 		}
 		public void SetVelocity(Coord value) { velocity = value; }
 		public virtual void Update() {
 			position += velocity;
-			onUpdate?.Invoke();
+			onUpdate?.Invoke(this);
 		}
 	}
 }
