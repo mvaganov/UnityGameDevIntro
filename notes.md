@@ -72,7 +72,9 @@ _ASSIGN: reimplement the win condition, this time with a timer that gives succes
 
 ## Lambda Expressions for Game Development
 
-* demonstrate: lambda expression in earlier game: entity specific game logic
+* demonstrate: lambda expression to replace Move function.
+
+* demonstrate: Show entity specific game logic that uses variables from just outside the lambda's scope.
 
 _ASSIGN: move all game win/loss logic out of the Update function and into lambda-expressions that are specific to the player or NPC_
 
