@@ -48,6 +48,7 @@
     <Compile Include="Game0.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Game1_1.cs" />
+    <Compile Include="Game1_2.cs" />
     <Compile Include="Game2.cs" />
     <Compile Include="MrV\InputSystem.cs" />
     <Compile Include="MrV\ConsoleTile.cs" />
