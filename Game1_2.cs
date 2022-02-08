@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Game1_1 {
+namespace Game1_2 {
 	class Program {
 		public struct Coord {
 			public short x, y;
@@ -42,6 +42,7 @@ namespace Game1_1 {
 			List<Entity> entities;
 			public bool running;
 			ConsoleKeyInfo userInput;
+			Dictionary<char, Action> controls;
 			public void Init() {
 				string mapStr =
 				"..............................\n" +
@@ -73,6 +74,15 @@ namespace Game1_1 {
 				mrv = new Entity(new Coord(20, 10), 'V', ConsoleColor.Cyan);
 				entities = new List<Entity>() { player, mrv };
 				running = true;
+				void QuitGame() { running = false; }
+				controls = new Dictionary<char, Action>() {
+					['w'] = () => { player.direction = Coord.Up; },
+					['a'] = () => { player.direction = Coord.Left; },
+					['s'] = () => { player.direction = Coord.Down; },
+					['d'] = () => { player.direction = Coord.Right; },
+					['q'] = QuitGame,
+					[(char)27] = QuitGame
+				};
 			}
 			public void Draw() {
 				for (int row = 0; row < map.GetLength(0); ++row) {
@@ -88,13 +98,8 @@ namespace Game1_1 {
 			}
 			public void GetUserInput() {
 				userInput = Console.ReadKey();
-				
-				switch (userInput.KeyChar) {
-					case 'w': player.direction = Coord.Up; break;
-					case 'a': player.direction = Coord.Left; break;
-					case 's': player.direction = Coord.Down; break;
-					case 'd': player.direction = Coord.Right; break;
-					case 'q': case (char)27: running = false; break;
+				if (controls.TryGetValue(userInput.KeyChar, out Action thingToDo)) {
+					thingToDo.Invoke();
 				}
 			}
 			public void Update() {
