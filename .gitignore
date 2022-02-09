@@ -64,3 +64,5 @@ crashlytics-build.properties
 UnityGame/Packages/packages-lock.json
 UnityGame/ProjectSettings/
 UnityGame/UserSettings
+
+*.solution.cs

@@ -8,12 +8,14 @@ namespace Game1_2 {
 			public Coord(int x, int y) { this.x = (short)x; this.y = (short)y; }
 			public void SetCursorPosition() { Console.SetCursorPosition(x, y); }
 			public bool IsInside(Coord limit) { return x < limit.x && y < limit.y && x >= 0 && y >= 0; }
-			public static Coord operator+(Coord a, Coord b) { return new Coord(a.x + b.x, a.y + b.y); }
-			public readonly static Coord 
-				Zero  = new Coord(0, 0),
-				Up    = new Coord(0,-1),
-				Left  = new Coord(-1,0),
-				Down  = new Coord(0, 1),
+			public static Coord operator +(Coord a, Coord b) { return new Coord(a.x + b.x, a.y + b.y); }
+			public static bool operator ==(Coord a, Coord b) { return a.x == b.x && a.y == b.y; }
+			public static bool operator !=(Coord a, Coord b) { return a.x != b.x || a.y != b.y; }
+			public readonly static Coord
+				Zero = new Coord(0, 0),
+				Up = new Coord(0, -1),
+				Left = new Coord(-1, 0),
+				Down = new Coord(0, 1),
 				Right = new Coord(1, 0);
 			public static Coord[] Directions = new Coord[] { Up, Left, Down, Right };
 		}

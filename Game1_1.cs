@@ -9,6 +9,8 @@ namespace Game1_1 {
 			public void SetCursorPosition() { Console.SetCursorPosition(x, y); }
 			public bool IsInside(Coord limit) { return x < limit.x && y < limit.y && x >= 0 && y >= 0; }
 			public static Coord operator+(Coord a, Coord b) { return new Coord(a.x + b.x, a.y + b.y); }
+			public static bool operator ==(Coord a, Coord b) { return a.x == b.x && a.y == b.y; }
+			public static bool operator !=(Coord a, Coord b) { return a.x != b.x || a.y != b.y; }
 			public readonly static Coord 
 				Zero  = new Coord(0, 0),
 				Up    = new Coord(0,-1),

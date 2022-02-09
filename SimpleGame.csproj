@@ -33,7 +33,7 @@
     <RootNamespace>SimpleGame</RootNamespace>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Game2.Program</StartupObject>
+    <StartupObject>Game1_1.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
